@@ -5,9 +5,9 @@ import App from "./App";
 import { act } from "react-dom/test-utils";
 import { formatSeasons } from "./utils/formatSeasons";
 
-// jest.mock('./api/fetchShow')
+jest.mock('./api/fetchShow')
 
-const responseObject = {
+const responseObject = { data: {
   id: 2993,
   url: 'http://www.tvmaze.com/shows/2993/stranger-things',
   name: 'Stranger Things',
@@ -604,7 +604,7 @@ const responseObject = {
       }
     ]
   }
-}
+} }
 
 const episodeArray = [
     {
@@ -797,18 +797,16 @@ const episodeArray = [
 // })
 
 test("App renders fetches and renders correctly", async () => {
-    // mockFetchShow.mockResolvedValueOnce(episodeArray)
+  mockFetchShow.mockResolvedValueOnce(responseObject);
 
-    const { getByText, getByTestId, getAllByText } = render(<App />);
+  const { getByText, getAllByText } = render(<App />);
 
-    // const buttonSelect = getByText(/Select a season/i);
-    // const buttonSeason = getByText(/Season 1/i);
+  await wait(() => {
+    getByText(/Select a season/i);
+  });
 
-    // fireEvent.click(buttonSelect);
-    // fireEvent.click(buttonSeason);
+  fireEvent.mouseDown(getByText(/Select a season/i));
 
-    getByText(/Fetching data/i);
-
-    // await wait();
-    // expect(getAllByText(/episode/i)).toHaveLength(8);
+  fireEvent.mouseDown(getByText(/season 1/i));
+  expect(getAllByText(/episode/i)).toHaveLength(8);
 })
